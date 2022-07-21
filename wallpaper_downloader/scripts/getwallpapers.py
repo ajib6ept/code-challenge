@@ -1,2 +1,5 @@
+from wallpaper_downloader.cli import arg_parse
+
+
 def main():
-    print("AAAAAAA")
+    arg_parse()
