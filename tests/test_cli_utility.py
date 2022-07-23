@@ -53,7 +53,6 @@ def test_fail_parametrs_with_subprocess(parametrs):
 def test_fail_parametrs(parametrs):
     runner = CliRunner()
     result = runner.invoke(arg_parse, parametrs)
-    assert result.exc_info[0].__name__ == "ValueError"
     assert result.exit_code != 0
 
 

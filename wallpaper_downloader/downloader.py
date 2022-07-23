@@ -15,7 +15,7 @@ IMAGE_FOLDER = os.path.join(
 def download_images(img_date, img_resolution, loglevel):
     if not os.path.exists(IMAGE_FOLDER):
         os.makedirs(IMAGE_FOLDER)
-    page_url = create_url(BASE_URL, img_date)
+    page_url = create_url(img_date)
     html = download_page(page_url)
     image_urls = get_image_urls_from_html(html, img_resolution)
     for url in image_urls:
@@ -51,10 +51,13 @@ def get_image_urls_from_html(html, img_resolution):
     return urls
 
 
-def create_url(base_url, month_year):
+def create_url(month_year, base_url=BASE_URL):
     month, year = month_year[:2], month_year[2:]
     previous_month = str(int(month) - 1).zfill(2)
-    previous_month = "12" if previous_month == "00" else previous_month
+    current_year = year
+    if previous_month == "00":
+        year = int(year) - 1
+        previous_month = "12"
     month_name = datetime.strptime(month, "%m").strftime("%B").lower()
-    new_url = f"{base_url}/{year}/{previous_month}/desktop-wallpaper-calendars-{month_name}-{year}/"  # noqa: E501
+    new_url = f"{base_url}/{year}/{previous_month}/desktop-wallpaper-calendars-{month_name}-{current_year}/"  # noqa: E501
     return new_url
