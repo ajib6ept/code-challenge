@@ -37,17 +37,17 @@ repos:
       - id: detect-private-key
       - id: end-of-file-fixer
       - id: mixed-line-ending
-      - id: name-tests-test
+      # - id: name-tests-test
 
   - repo: local
     hooks:
-      - id: make-test
-        name: make-test
-        entry: make getwallpapers_test
-        language: system
-        pass_filenames: false
-        always_run: true
-        verbose: true
+      # - id: make-test
+      #   name: make-test
+      #   entry: make getwallpapers_test
+      #   language: system
+      #   pass_filenames: false
+      #   always_run: true
+      #   verbose: true
 
       - id: make-lint
         name: make-lint
