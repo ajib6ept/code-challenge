@@ -1,7 +1,9 @@
 import subprocess
+from typing import List, Tuple
 
 import pytest
 from click.testing import CliRunner
+from pytest_mock import MockFixture
 
 from wallpaper_downloader.cli import arg_parse
 from wallpaper_downloader.downloader import create_url
@@ -30,7 +32,7 @@ CORRECT_URLS = (
 )
 
 
-def capture(command):
+def capture(command: List[str]) -> Tuple[bytes, bytes, int]:
     proc = subprocess.Popen(
         command,
         stdout=subprocess.PIPE,
@@ -41,7 +43,7 @@ def capture(command):
 
 
 @pytest.mark.parametrize("parametrs", FAIL_PARAMETRS)
-def test_fail_parametrs_with_subprocess(parametrs):
+def test_fail_parametrs_with_subprocess(parametrs: List[str]) -> None:
     command = ["poetry", "run", "getwallpapers"]
     command.extend(parametrs)
     out, err, exitcode = capture(command)
@@ -50,14 +52,14 @@ def test_fail_parametrs_with_subprocess(parametrs):
 
 
 @pytest.mark.parametrize("parametrs", FAIL_PARAMETRS)
-def test_fail_parametrs(parametrs):
+def test_fail_parametrs(parametrs: List[str]) -> None:
     runner = CliRunner()
     result = runner.invoke(arg_parse, parametrs)
     assert result.exit_code != 0
 
 
 @pytest.mark.parametrize("parametrs", GOOD_PARAMETRS)
-def test_good_parametrs(parametrs, mocker):
+def test_good_parametrs(parametrs: List[str], mocker: MockFixture) -> None:
     mocker.patch(
         "wallpaper_downloader.downloader.download_page", lambda x: "0"
     )
@@ -67,6 +69,6 @@ def test_good_parametrs(parametrs, mocker):
 
 
 @pytest.mark.parametrize("parametrs", CORRECT_URLS)
-def test_correct_create_url(parametrs):
+def test_correct_create_url(parametrs: List[str]) -> None:
     month_year, correct_url = parametrs
     assert create_url(month_year) == correct_url

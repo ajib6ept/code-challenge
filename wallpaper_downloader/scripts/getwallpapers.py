@@ -1,5 +1,5 @@
 from wallpaper_downloader.cli import arg_parse
 
 
-def main():
+def main() -> None:
     arg_parse()

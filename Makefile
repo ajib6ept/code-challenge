@@ -10,3 +10,6 @@ getwallpapers_test:
 
 lint:
 	@poetry run flake8 wallpaper_downloader tests
+
+mypy:
+	@poetry run mypy --strict .

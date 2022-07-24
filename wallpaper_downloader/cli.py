@@ -31,7 +31,9 @@ FILE_RESOLUTION_OPTIONS = (
 )
 
 
-def validate_image_date(ctx, param, value):
+def validate_image_date(
+    ctx: click.core.Context, param: click.core.Argument, value: str
+) -> str:
     try:
         dt = datetime.strptime(value, "%m%Y")
     except ValueError:
@@ -47,7 +49,9 @@ def validate_image_date(ctx, param, value):
     return value
 
 
-def validate_image_resolution(ctx, param, value):
+def validate_image_resolution(
+    ctx: click.core.Context, param: click.core.Argument, value: str
+) -> str:
     if value not in FILE_RESOLUTION_OPTIONS:
         raise click.BadParameter(
             "please specify the correct format, for example 640x480"
@@ -66,5 +70,5 @@ def validate_image_resolution(ctx, param, value):
 )
 @click.argument("image_date", callback=validate_image_date)
 @click.argument("image_resolution", callback=validate_image_resolution)
-def arg_parse(image_date, image_resolution, loglevel):
+def arg_parse(image_date: str, image_resolution: str, loglevel: str) -> None:
     download_images(image_date, image_resolution, loglevel)
