@@ -13,9 +13,8 @@ IMAGE_FOLDER = os.path.join(
 )
 
 
-def download_images(img_date: str, img_resolution: str, loglevel: str) -> None:
-    if not os.path.exists(IMAGE_FOLDER):
-        os.makedirs(IMAGE_FOLDER)
+def download(img_date: str, img_resolution: str, loglevel: str) -> None:
+    mk_dir(IMAGE_FOLDER)
     page_url = create_url(img_date)
     html = download_page(page_url)
     image_urls = get_image_urls_from_html(html, img_resolution)
@@ -29,8 +28,7 @@ def download_page(url: str) -> str:
         allow_redirects=False,
         timeout=5,
     )
-    if r.status_code != 200:
-        print("not corrent status code")
+    r.raise_for_status()
     return r.content.decode("utf-8")
 
 
@@ -38,12 +36,12 @@ def download_image(url: str, save_path: str) -> None:
     filename = url.split("/")[-1]
     path = os.path.join(save_path, filename)
     r = requests.get(url, stream=True)
-    if r.status_code == 200:
-        with open(path, "wb") as f:
-            r.raw.decode_content = True
-            shutil.copyfileobj(r.raw, f)
-    else:
-        print(f"bad status code for {url}")
+    r.raise_for_status()
+    with open(path, "wb") as f:
+        r.raw.decode_content = True
+        shutil.copyfileobj(r.raw, f)
+    # else:
+    #     print(f"bad status code for {url}")
 
 
 def get_image_urls_from_html(html: str, img_resolution: str) -> List[str]:
@@ -55,6 +53,11 @@ def get_image_urls_from_html(html: str, img_resolution: str) -> List[str]:
 
 
 def create_url(month_year: str, base_url: str = BASE_URL) -> str:
+    """
+    >>> create_url('072017')
+    'https://www.smashingmagazine.com/2017/06/desktop-wallpaper-calendars-july-2017/'
+    """
+
     month, year = month_year[:2], month_year[2:]
     previous_month = str(int(month) - 1).zfill(2)
     current_year = year
@@ -64,3 +67,8 @@ def create_url(month_year: str, base_url: str = BASE_URL) -> str:
     month_name = datetime.strptime(month, "%m").strftime("%B").lower()
     new_url = f"{base_url}/{year}/{previous_month}/desktop-wallpaper-calendars-{month_name}-{current_year}/"  # noqa: E501
     return new_url
+
+
+def mk_dir(path: str) -> None:
+    if not os.path.exists(path):
+        os.makedirs(path)

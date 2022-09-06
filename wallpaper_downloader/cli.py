@@ -1,8 +1,7 @@
+import typing
 from datetime import datetime
 
 import click
-
-from wallpaper_downloader.downloader import download_images
 
 MIN_DATE = "072008"
 MAX_DATE = datetime.today().strftime("%m%Y")
@@ -70,5 +69,7 @@ def validate_image_resolution(
 )
 @click.argument("image_date", callback=validate_image_date)
 @click.argument("image_resolution", callback=validate_image_resolution)
-def arg_parse(image_date: str, image_resolution: str, loglevel: str) -> None:
-    download_images(image_date, image_resolution, loglevel)
+def arg_parse(
+    image_date: str, image_resolution: str, loglevel: str
+) -> typing.Tuple[str, str, str]:
+    return image_date, image_resolution, loglevel

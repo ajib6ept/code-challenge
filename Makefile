@@ -13,3 +13,6 @@ lint:
 
 mypy:
 	@poetry run mypy --strict .
+
+test:
+	poetry run pytest -vvs --doctest-modules
