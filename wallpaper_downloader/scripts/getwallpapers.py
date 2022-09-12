@@ -3,5 +3,5 @@ from wallpaper_downloader.downloader import download
 
 
 def main() -> None:
-    args = arg_parse()
+    args = arg_parse(standalone_mode=False)
     download(*args)

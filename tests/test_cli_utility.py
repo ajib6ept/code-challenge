@@ -47,7 +47,7 @@ def test_fail_parametrs_with_subprocess(parametrs: List[str]) -> None:
     command = ["poetry", "run", "getwallpapers"]
     command.extend(parametrs)
     out, err, exitcode = capture(command)
-    assert "Error" in err.decode("utf-8")
+    assert "BadParameter" in err.decode("utf-8")
     assert 0 != exitcode
 
 

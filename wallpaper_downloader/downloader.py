@@ -1,3 +1,4 @@
+import logging
 import os
 import shutil
 from datetime import datetime
@@ -5,6 +6,8 @@ from typing import List, cast
 
 import lxml.html
 import requests
+
+from wallpaper_downloader.logger import create_logger
 
 BASE_URL = "https://www.smashingmagazine.com"
 
@@ -14,6 +17,7 @@ IMAGE_FOLDER = os.path.join(
 
 
 def download(img_date: str, img_resolution: str, loglevel: str) -> None:
+    create_logger(loglevel)
     mk_dir(IMAGE_FOLDER)
     page_url = create_url(img_date)
     html = download_page(page_url)
@@ -40,8 +44,6 @@ def download_image(url: str, save_path: str) -> None:
     with open(path, "wb") as f:
         r.raw.decode_content = True
         shutil.copyfileobj(r.raw, f)
-    # else:
-    #     print(f"bad status code for {url}")
 
 
 def get_image_urls_from_html(html: str, img_resolution: str) -> List[str]:
@@ -72,3 +74,4 @@ def create_url(month_year: str, base_url: str = BASE_URL) -> str:
 def mk_dir(path: str) -> None:
     if not os.path.exists(path):
         os.makedirs(path)
+        logging.info(f"{path} directory was created")
